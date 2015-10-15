@@ -10,6 +10,7 @@
 
 <body>
 <header>
+<div class="registration">
   <form id="register">
     <input name="email" type="text" placeholder="email" id='email'>
     <input name="password" type="password" placeholder="password">
@@ -21,20 +22,23 @@
     <input name="password" type="password" placeholder="password">
     <input name="login" type="submit" value="Login">
   </form>
+  </div>
 <!--  <form id="list-games">
     <input name="list-games" type="submit" value="List Games">
     <input class="token" name="token" type="hidden">
   </form> -->
+  <div class="game-tools">
   <form id="create-game">
-    <input name="create-game" type="submit" value="Create Session">
+    <input name="create-game" type="submit" value="New Session">
     <input class="token" name="token" type="hidden">
   </form>
   <form id="show-game">
-    <label for="show-id">Id:</label>
-    <input id="show-id" type="text" size="4">
     <input name="show-game" type="submit" value="Load Session">
+<!--    <label for="show-id">Id:</label> -->
+    <input id="show-id" type="text" size="4">
     <input class="token" name="token" type="hidden">
  </form>
+ </div>
   <!--
   <form id="join-game">
     <label for="join-id">Id:</label>
