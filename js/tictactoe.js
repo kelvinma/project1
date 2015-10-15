@@ -39,7 +39,14 @@ $(document).ready(function(){
       getWinner(player);
       switchPlayer(player);
       notification();
-      console.log(grid + ' ' + moveCounter);
+      var token = $('.token').val(); // sets value of var token to class .token
+      var id = $('.grid').data('game-id');
+      var index = $(this).attr('id'); // sets index
+      var value = $(this).html(); // sets 'X' or 'O'
+      var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
+      // e.preventDefault();
+      tttapi.markCell(id, data, token, callback);
+        console.log(grid + ' ' + moveCounter);
     });
 
 
@@ -218,15 +225,15 @@ $(document).ready(function(){
   };
 
 
-  $('.grid').on('click', '.open', function() {
-    var token = $('.token').val(); // sets value of var token to class .token
-    var id = $('.grid').data('game-id');
-    var index = $(this).attr('id'); // sets index
-    var value = $(this).html(); // sets 'X' or 'O'
-    var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
-    // e.preventDefault();
-    tttapi.markCell(id, data, token, callback);
-  });
+  // $('.grid').on('click', '.open', function() {
+  //   var token = $('.token').val(); // sets value of var token to class .token
+  //   var id = $('.grid').data('game-id');
+  //   var index = $(this).attr('id'); // sets index
+  //   var value = $(this).html(); // sets 'X' or 'O'
+  //   var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
+  //   // e.preventDefault();
+  //   tttapi.markCell(id, data, token, callback);
+  // });
 
 
   $('#watch-game').on('submit', function(e){
