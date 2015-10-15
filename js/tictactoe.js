@@ -1,8 +1,5 @@
 var tttapi = tttapi || {};
 
-  // Data placeholder
-  var grid = ['','','','','','','','',''];
-
 $(document).ready(function(){
 
   $('.board').hide();
@@ -39,6 +36,8 @@ $(document).ready(function(){
       getWinner(player);
       switchPlayer(player);
       notification();
+
+      // API call to auto save every move
       var token = $('.token').val(); // sets value of var token to class .token
       var id = $('.grid').data('game-id');
       var index = $(this).attr('id'); // sets index
@@ -46,9 +45,10 @@ $(document).ready(function(){
       var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
       // e.preventDefault();
       tttapi.markCell(id, data, token, callback);
-        console.log(grid + ' ' + moveCounter);
+
     });
 
+  var grid = ['','','','','','','','',''];
 
   var getWinner = function(player) {
     var winner;
@@ -77,11 +77,9 @@ $(document).ready(function(){
     checkScore();
   };
 
-
-
   // loads notifications
   var notification = function(){
-  $('.notifications').html(player + "'s Move");
+    $('.notifications').html(player + "'s Move");
   }
 
   var newGame = function(){
@@ -166,6 +164,7 @@ $(document).ready(function(){
   $('#create-game').on('submit', function(e) {
     var token = $(this).children('[name="token"]').val();
     e.preventDefault();
+
     var setGameId = function(error, data){
       if (error) {
         alert('Cannot create game');
@@ -173,8 +172,11 @@ $(document).ready(function(){
       }
       $('.grid').data('game-id', data.game.id);
       $('#session-number').html($('.grid').data('game-id'));
+
+      newGame();
       $('.board').show('slow');
     };
+
     tttapi.createGame(token, setGameId);
   });
 
@@ -183,6 +185,7 @@ $(document).ready(function(){
     var id = $('#show-id').val();
     e.preventDefault();
     newGame();
+
     var drawBoard = function (error, data){
       if (error) {
         alert('Saved session does not exist!');
@@ -212,10 +215,12 @@ $(document).ready(function(){
         alert('Saved session does not exist!');
         return;
       }
+
       var saveState = data.game.cells;
       for (var i = 0; i < grid.length; i++) {
         grid[i] = saveState[i];
         var square = '#'+i;
+
         $(square).html(grid[i]);
         $('.grid').data('game-id', data.game.id);
         $('#session-number').html($('.grid').data('game-id'))
@@ -223,18 +228,6 @@ $(document).ready(function(){
 
     tttapi.joinGame(id, token, drawBoard);
   };
-
-
-  // $('.grid').on('click', '.open', function() {
-  //   var token = $('.token').val(); // sets value of var token to class .token
-  //   var id = $('.grid').data('game-id');
-  //   var index = $(this).attr('id'); // sets index
-  //   var value = $(this).html(); // sets 'X' or 'O'
-  //   var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
-  //   // e.preventDefault();
-  //   tttapi.markCell(id, data, token, callback);
-  // });
-
 
   $('#watch-game').on('submit', function(e){
     var token = $(this).children('[name="token"]').val();
@@ -254,12 +247,25 @@ $(document).ready(function(){
       $('#watch-index').val(cell.index);
       $('#watch-value').val(cell.value);
     });
+
     gameWatcher.on('error', function(e){
       console.error('an error has occured with the stream', e);
     });
   });
 
   });
+
+// Consolidated click functionality
+
+  // $('.grid').on('click', '.open', function() {
+  //   var token = $('.token').val(); // sets value of var token to class .token
+  //   var id = $('.grid').data('game-id');
+  //   var index = $(this).attr('id'); // sets index
+  //   var value = $(this).html(); // sets 'X' or 'O'
+  //   var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
+  //   // e.preventDefault();
+  //   tttapi.markCell(id, data, token, callback);
+  // });
 
 
 
