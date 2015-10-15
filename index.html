@@ -4,16 +4,75 @@
 <title>Tic Tac Toe</title>
 <script language="javascript" type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script language="javascript" type="text/javascript" src="js/tictactoe.js"></script>
+<script language="javascript" type="text/javascript" src="js/tttapi.js"></script>
 <link rel="stylesheet" type="text/css" href="styles/style.css">
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'></head>
+
 <body>
+<header>
+  <form id="register">
+    <input name="email" type="text" placeholder="email" id='email'>
+    <input name="password" type="password" placeholder="password">
+    <input name="password_confirmation" type="password" placeholder="password confirmation">
+    <input name="register" type="submit" value="Register">
+  </form>
+  <form id="login">
+    <input name="email" type="text" placeholder="email">
+    <input name="password" type="password" placeholder="password">
+    <input name="login" type="submit" value="Login">
+  </form>
+<!--  <form id="list-games">
+    <input name="list-games" type="submit" value="List Games">
+    <input class="token" name="token" type="hidden">
+  </form> -->
+  <form id="create-game">
+    <input name="create-game" type="submit" value="Create Session">
+    <input class="token" name="token" type="hidden">
+  </form>
+  <form id="show-game">
+    <label for="show-id">Id:</label>
+    <input id="show-id" type="text" size="4">
+    <input name="show-game" type="submit" value="Load Session">
+    <input class="token" name="token" type="hidden">
+ </form>
+  <!--
+  <form id="join-game">
+    <label for="join-id">Id:</label>
+    <input id="join-id" type="text" size="4">
+    <input name="join-game" type="submit" value="Join Session">
+    <input class="token" name="token" type="hidden">
+ </form>
+ <form id="mark-cell">
+    <label for="mark-id">Id:</label>
+    <input id="mark-id" type="text" size="4">
+    <label for="mark-index">Index:</label>
+    <input name="index" id="mark-index" type="text" size="4">
+    <label for="mark-value">Value:</label>
+    <input name="value" id="mark-value" type="text" size="4">
+    <input name="mark-cell" type="submit" value="Mark Cell">
+    <input class="token" name="token" type="hidden">
+  </form>
+  <form id="watch-game">
+    <label for="watch-id">Id:</label>
+    <input id="watch-id" type="text" size="4">
+    <label for="watch-index">Index:</label>
+    <input name="index" id="watch-index" type="text" size="4">
+    <label for="watch-value">Value:</label>
+    <input name="value" id="watch-value" type="text" size="4">
+    <input name="watch-game" type="submit" value="Watch Game">
+    <input class="token" name="token" type="hidden">
+  </form>
+  <br>
+  <label for="result">Result</label>
+  <textarea id="result"></textarea>-->
+</header>
   <h1>Tic Tac Toe</h1>
 <div class="board">
 
   <div class="player-counter">
 
     <div id="player-name">
-    <p>PLAYER 1</p>
+    <p>PLAYER X</p>
     </div>
     <div id="player-score" class="score">
     </div>
@@ -22,7 +81,7 @@
 
   <div class="opponent-counter">
     <div id="opponent-name">
-    <p>PLAYER 2</p>
+    <p>PLAYER O</p>
     </div>
     <div id="opponent-score" class="score">
     </div>
@@ -61,11 +120,14 @@
 <div class="play-buttons">
 <div class="notifications">
 </div>
+<div>
+  SESSION # <span id="session-number"></span></div>
+
   <form>
-  <input id="reset" type="button" value="Reset Games" />
+  <input id="reset" type="button" value="Reset Scores" />
   </form>
 </div>
-
+</div>
 </div>
 
 

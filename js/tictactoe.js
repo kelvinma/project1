@@ -1,3 +1,8 @@
+var tttapi = tttapi || {};
+
+  // Data placeholder
+  var grid = ['','','','','','','','',''];
+
 $(document).ready(function(){
 
   // Zeroes the score for both players, sets new game notification
@@ -23,9 +28,9 @@ $(document).ready(function(){
         } return player;
     };
 
-var moveCounter = 0; // moveCounter, tie game at maxed out moves
-// click functionality for board
-    $('.grid').on('click', '.open', function(){
+  var moveCounter = 0; // moveCounter, tie game at maxed out moves
+  // click functionality for board
+  $('.grid').on('click', '.open', function(){
       $(this).html(player);
       $(this).removeClass('open').addClass('closed');
       grid[$(this).attr('id')] = player;
@@ -37,55 +42,18 @@ var moveCounter = 0; // moveCounter, tie game at maxed out moves
     });
 
 
-// main game - gets winner
-  var grid = ['','','','','','','','',''];
-
   var getWinner = function(player) {
     var winner;
     // Winner, 0,0, vertical
-    if (grid[0] === player && grid[3] === player && grid[6] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-
-    } // Winner, 0,0, horizontal
-    else if (grid[0] === player && grid[1] === player && grid[2] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-
-    } // Winner, 0,0, diagonal
-    else if (grid[0] === player && grid[4] === player && grid[8] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-    } // Winner, 0,1, vertical
-    else if (grid[1] === player && grid[4] === player && grid[7] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-    } // Winner, 0,2, vertical
-    else if (grid[2] === player && grid[5] === player && grid[8] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-    } // Winner, 0,2, diagonal
-    else if (grid[2] === player && grid[4] === player && grid[6] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-    } // Winner, 0,1, vertical
-    else if (grid[1] === player && grid[4] === player && grid[7] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-    } // Winner, 1,0, horizontal
-    else if (grid[3] === player && grid[4] === player && grid[5] === player) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
-      } // Winner, 2,0, horizontal
-    else if (grid[6] === player && grid[7] === player && grid[8] === player) {
+    if ((grid[0] === player && grid[3] === player && grid[6] === player) ||
+        (grid[0] === player && grid[1] === player && grid[2] === player) ||
+        (grid[0] === player && grid[4] === player && grid[8] === player) ||
+        (grid[1] === player && grid[4] === player && grid[7] === player) ||
+        (grid[2] === player && grid[5] === player && grid[8] === player) ||
+        (grid[2] === player && grid[4] === player && grid[6] === player) ||
+        (grid[1] === player && grid[4] === player && grid[7] === player) ||
+        (grid[3] === player && grid[4] === player && grid[5] === player) ||
+        (grid[6] === player && grid[7] === player && grid[8] === player)) {
           alert(player + ' Wins!');
           winner = player;
           newGame();
@@ -103,23 +71,24 @@ var moveCounter = 0; // moveCounter, tie game at maxed out moves
 
 
 
-// loads notifications
-var notification = function(){
+  // loads notifications
+  var notification = function(){
   $('.notifications').html(player + "'s Move");
-}
+  }
 
-var newGame = function(){
-  grid = ['','','','','','','','',''];
-  $('.square').html('').addClass('open').removeClass('closed');
-  moveCounter = 0;
-}
+  var newGame = function(){
+    grid = ['','','','','','','','','']; // logic
+    $('.square').html('').addClass('open').removeClass('closed'); // ui
+    moveCounter = 0; // logic
+  }
 
-//resets score
+  //resets score
   $('#reset').click(function() {
-    xScore = 0;
-    oScore = 0;
-    $('.score').html(xScore);
-    newGame();
+    xScore = 0;  // logic
+    oScore = 0;  // logic
+    $('.score').html(xScore);  // ui
+    newGame(); // both??
+    $('#session-number').html('')
   });
 
 });
