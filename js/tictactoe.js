@@ -180,6 +180,13 @@ $(document).ready(function(){
     tttapi.createGame(token, setGameId);
   });
 
+  $('#play-offline').on('submit', function(e) {
+    e.preventDefault();
+    newGame();
+    $('.board').show('slow');
+    $('#session-number').html('OFFLINE')
+  });
+
   $('#show-game').on('submit', function(e) {
     var token = $('.token').val();
     var id = $('#show-id').val();
