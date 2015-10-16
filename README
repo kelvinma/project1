@@ -1,0 +1,5 @@
+This is a Tic Tac Toe web application, built as a project for General Assembly's Web Development Immersive.
+
+This game was built using a basic HTML/CSS layout with Javascript providing functionality/interactivity.
+
+An integrated API allows for autosaving of gamestates upon every move, as well as the ability to load saved gamestates, for registered users. There is also an option for offline play. An overall score tally is kept for all games played, which can be reset at any point.
