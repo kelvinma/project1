@@ -2,7 +2,7 @@ var tttapi = tttapi || {};
 
 $(document).ready(function(){
 
-  $('.board').hide();
+  $('#session-number').html('OFFLINE')
   // Zeroes the score for both players, sets new game notification
   var xScore = 0;
   var oScore = 0;
@@ -44,40 +44,46 @@ $(document).ready(function(){
       var value = $(this).html(); // sets 'X' or 'O'
       var data = wrap('game', wrap('cell', {index: index, value: value})); // passes object with index and value
       // e.preventDefault();
-      tttapi.markCell(id, data, token, callback);
-
+      if (token && id) {
+        tttapi.markCell(id, data, token, callback);
+      }
     });
 
   var grid = ['','','','','','','','',''];
 
   var getWinner = function(player) {
     var winner;
-    // Winner, 0,0, vertical
-    if ((grid[0] === player && grid[3] === player && grid[6] === player) ||
-        (grid[0] === player && grid[1] === player && grid[2] === player) ||
-        (grid[0] === player && grid[4] === player && grid[8] === player) ||
-        (grid[1] === player && grid[4] === player && grid[7] === player) ||
-        (grid[2] === player && grid[5] === player && grid[8] === player) ||
-        (grid[2] === player && grid[4] === player && grid[6] === player) ||
-        (grid[1] === player && grid[4] === player && grid[7] === player) ||
-        (grid[3] === player && grid[4] === player && grid[5] === player) ||
-        (grid[6] === player && grid[7] === player && grid[8] === player)) {
-          alert(player + ' Wins!');
-          winner = player;
-          newGame();
+    var winAlert = function(){
+        alert(player + ' Wins!');
+        winner = player;
+        if (winner === 'X') {
+          xScore++;
+        } else if (winner === 'O') {
+          oScore++;
+        };
+        newGame();
+      };
+
+// horizontal win
+    for (var index = 0; index < 3; index++) {
+      if (grid[index * 3] === player && grid[index * 3 + 1] === player && grid[index * 3 + 2] === player) {
+        winAlert();
+
+      // vertical win
+      } else if (grid[index] === player && grid[index + 3] === player && grid[index + 6] === player) {
+        winAlert();
+
+      // diagonal win
+      } else if ((grid[0] === player && grid[4] === player && grid[8] === player) || (grid[2] === player && grid[4] === player && grid[6] === player)) {
+        winAlert();
+      } else if (moveCounter === 9 && !winner) {
+        alert('Tie Game!');
+        newGame();
+      }
+      checkScore();
     }
-    if (winner === 'X') {
-      xScore++;
-    } else if (winner === 'O') {
-      oScore++;
-    } else if (moveCounter === 9 && !winner) {
-      alert('Tie Game!');
-      newGame();
-    }
-    checkScore();
   };
 
-  // loads notifications
   var notification = function(){
     $('.notifications').html(player + "'s Move");
   }
@@ -94,8 +100,7 @@ $(document).ready(function(){
     oScore = 0;  // logic
     $('.score').html(xScore);  // ui
     newGame(); // both??
-    $('#session-number').html('')
-    $('.board').hide('slow');
+    player = 'X';
   });
 
 // API Stuff
@@ -214,9 +219,8 @@ $(document).ready(function(){
 
   $('#join-game').on('submit', function(e) {
     var token = $('.token').val();
-    var id = $('#join-id').val();
+    var id = $('#watch-id').val();
     e.preventDefault();
-    newGame();
     var drawBoard = function (error, data){
       if (error) {
         alert('Saved session does not exist!');
@@ -230,16 +234,11 @@ $(document).ready(function(){
 
         $(square).html(grid[i]);
         $('.grid').data('game-id', data.game.id);
-        $('#session-number').html($('.grid').data('game-id'))
+        $('#session-number').html($('.grid').data('game-id'));
+        $('.board').show('slow');
       }
 
     tttapi.joinGame(id, token, drawBoard);
-  };
-
-  $('#watch-game').on('submit', function(e){
-    var token = $(this).children('[name="token"]').val();
-    var id = $('#watch-id').val();
-    e.preventDefault();
 
     var gameWatcher = tttapi.watchGame(id, token);
 
@@ -249,18 +248,45 @@ $(document).ready(function(){
         this.gameWatcher.close();
         return console.warn(data.timeout);
       }
+
       var gameData = parsedData.game;
       var cell = gameData.cell;
-      $('#watch-index').val(cell.index);
-      $('#watch-value').val(cell.value);
+      var squareIndex = cell.index;
+      $('#'+squareIndex).val(cell.value);
     });
 
     gameWatcher.on('error', function(e){
       console.error('an error has occured with the stream', e);
     });
-  });
+  };
 
   });
+
+  // $('#watch-game').on('submit', function(e){
+  //   var token = $('.token').val();
+  //   var id = $('#watch-id').val();
+  //   e.preventDefault();
+
+  //   var gameWatcher = tttapi.watchGame(id, token);
+
+  //   gameWatcher.on('change', function(data){
+  //     var parsedData = JSON.parse(data);
+  //     if (data.timeout) { //not an error
+  //       this.gameWatcher.close();
+  //       return console.warn(data.timeout);
+  //     }
+  //     var gameData = parsedData.game;
+  //     var cell = gameData.cell;
+  //     $('#watch-index').val(cell.index);
+  //     $('#watch-value').val(cell.value);
+  //   });
+
+  //   gameWatcher.on('error', function(e){
+  //     console.error('an error has occured with the stream', e);
+  //   });
+  // });
+
+  // });
 
 // Consolidated click functionality
 
