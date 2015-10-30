@@ -1,6 +1,9 @@
 var tttapi = tttapi || {};
+var token = $('.token').val();
+var id = $('.grid').data('game-id');
 
 $(document).ready(function(){
+  var loggedIn = false;
 
   $('#session-number').html('OFFLINE');
   // Zeroes the score for both players, sets new game notification
@@ -92,9 +95,7 @@ $(document).ready(function(){
     grid = ['','','','','','','','','']; // logic
     $('.square').html('').addClass('open').removeClass('closed'); // ui
     moveCounter = 0; // logic
-    if (token && id) {
       createGame();
-    }
   };
 
   //resets score
@@ -156,6 +157,7 @@ $(document).ready(function(){
       callback(null, data);
       $('.token').val(data.user.token); // sets .token as data.user.token
       alert('Successfully logged in!');
+      loggedIn = true;
     };
     e.preventDefault();
     tttapi.login(credentials, cb);
@@ -167,33 +169,26 @@ $(document).ready(function(){
     tttapi.listGames(token, callback); // passes token as first argument
   });
 
-  $('#create-game').on('submit', createGame());
-
-    var createGame = function(e) {
-    var token = $(this).children('[name="token"]').val();
+  $('#create-game').on('submit', function(e) {
     e.preventDefault();
-
-    var setGameId = function(error, data){
-      if (error) {
-        alert('Cannot create game');
-        return;
-      }
-      $('.grid').data('game-id', data.game.id);
-      $('#session-number').html($('.grid').data('game-id'));
-
-      newGame();
-      $('.board').show('slow');
-    };
-
-    tttapi.createGame(token, setGameId);
-  };
-
-  $('#play-offline').on('submit', function(e) {
-    e.preventDefault();
-    newGame();
-    $('.board').show('slow');
-    $('#session-number').html('OFFLINE');
+    createGame();
   });
+
+  var createGame = function() {
+    if (loggedIn === true) {
+      var token = $('.token').val();
+      var setGameId = function(error, data){
+        if (error) {
+          alert('Cannot create game');
+          return;
+        }
+        $('.grid').data('game-id', data.game.id);
+        $('#session-number').html($('.grid').data('game-id'));
+      };
+
+      tttapi.createGame(token, setGameId);
+    }
+  };
 
   $('#show-game').on('submit', function(e) {
     var token = $('.token').val();
@@ -213,7 +208,6 @@ $(document).ready(function(){
         $(square).html(grid[i]);
         $('.grid').data('game-id', data.game.id);
         $('#session-number').html($('.grid').data('game-id'));
-        $('.board').show('slow');
       }
     };
     tttapi.showGame(id, token, drawBoard);
@@ -246,10 +240,9 @@ $(document).ready(function(){
 
   });
 
-  var watchGame = function(e){
+  var watchGame = function(){
     var token = $('.token').val();
-    var id = $('#watch-id').val();
-    e.preventDefault();
+    var id = $('#join-id').val();
 
     var gameWatcher = tttapi.watchGame(id, token);
 
@@ -261,10 +254,9 @@ $(document).ready(function(){
       }
       var gameData = parsedData.game;
       var cell = gameData.cell;
-      $('#'+squareIndex).val(cell.value); // draw board on clicks?
-      switchPlayer();
-      $('#watch-index').val(cell.index);
-      $('#watch-value').val(cell.value);
+
+      // Draw board pieces here
+
     });
 
     gameWatcher.on('error', function(e){
